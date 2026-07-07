@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products | Golden Crust Bakery</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <div class="brand-mark">GC</div>
+        <div>
+          <h1>Golden Crust</h1>
+          <p>Freshly baked daily</p>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="products.html" class="active">Products</a>
+        <a href="inventory.html">Inventory</a>
+        <a href="orders.html">Orders</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="page-content">
+      <section class="page-header">
+        <h2>Our Signature Products</h2>
+        <p>Choose from our wide variety of freshly baked favorites.</p>
+      </section>
+
+      <section class="product-grid">
+        <article class="product-card">
+          <img src="images/cake.svg" alt="Layered cake" />
+          <h3>Chocolate Cake</h3>
+          <div class="price-row">
+            <p class="price">₹2,400</p>
+            <button type="button" class="order-btn" data-product="Chocolate Cake" data-price="2400">Order</button>
+          </div>
+          <p>Rich chocolate sponge with silky ganache and berry garnish.</p>
+        </article>
+        <article class="product-card">
+          <img src="images/bread.svg" alt="Fresh bread" />
+          <h3>Artisan Bread</h3>
+          <div class="price-row">
+            <p class="price">₹600</p>
+            <button type="button" class="order-btn" data-product="Artisan Bread" data-price="600">Order</button>
+          </div>
+          <p>Crusty loaf with a soft center and a golden finish.</p>
+        </article>
+        <article class="product-card">
+          <img src="images/pastry.svg" alt="Pastries" />
+          <h3>Butter Pastry</h3>
+          <div class="price-row">
+            <p class="price">₹400</p>
+            <button type="button" class="order-btn" data-product="Butter Pastry" data-price="400">Order</button>
+          </div>
+          <p>Flaky pastry filled with vanilla cream and caramelized sugar.</p>
+        </article>
+        <article class="product-card">
+          <img src="images/cookies.svg" alt="Cookies" />
+          <h3>Classic Cookies</h3>
+          <div class="price-row">
+            <p class="price">₹300</p>
+            <button type="button" class="order-btn" data-product="Classic Cookies" data-price="300">Order</button>
+          </div>
+          <p>Soft-baked cookies with chocolate chips and almond crunch.</p>
+        </article>
+        <article class="product-card">
+          <img src="images/donut.svg" alt="Donuts" />
+          <h3>Glazed Donuts</h3>
+          <div class="price-row">
+            <p class="price">₹250</p>
+            <button type="button" class="order-btn" data-product="Glazed Donuts" data-price="250">Order</button>
+          </div>
+          <p>Light doughnuts topped with glossy vanilla glaze.</p>
+        </article>
+        <article class="product-card">
+          <img src="images/muffin.svg" alt="Muffins" />
+          <h3>Blueberry Muffins</h3>
+          <div class="price-row">
+            <p class="price">₹350</p>
+            <button type="button" class="order-btn" data-product="Blueberry Muffins" data-price="350">Order</button>
+          </div>
+          <p>Moist muffins packed with juicy berries and a delicate crumb.</p>
+        </article>
+      </section>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          document.querySelectorAll('.order-btn').forEach((button) => {
+            button.addEventListener('click', () => {
+              const product = button.dataset.product;
+              const price = Number(button.dataset.price);
+              const storedOrders = JSON.parse(localStorage.getItem('bakeryOrders') || '[]');
+              const existingItem = storedOrders.find((item) => item.name === product);
+
+              if (existingItem) {
+                existingItem.quantity += 1;
+                existingItem.total = existingItem.quantity * existingItem.price;
+              } else {
+                storedOrders.push({ name: product, price, quantity: 1, total: price, customer: 'You' });
+              }
+
+              localStorage.setItem('bakeryOrders', JSON.stringify(storedOrders));
+              window.location.href = 'orders.html';
+            });
+          });
+        });
+      </script>
+    </main>
+
+    <footer class="site-footer">
+      <p>© 2026 Golden Crust Bakery</p>
+      <p>Follow us: Instagram • Facebook • Pinterest</p>
+    </footer>
+  </body>
+</html>

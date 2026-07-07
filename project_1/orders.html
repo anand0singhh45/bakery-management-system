@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orders | Golden Crust Bakery</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <div class="brand-mark">GC</div>
+        <div>
+          <h1>Golden Crust</h1>
+          <p>Freshly baked daily</p>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="inventory.html">Inventory</a>
+        <a href="orders.html" class="active">Orders</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="page-content">
+      <section class="page-header">
+        <h2>Your Bakery Orders</h2>
+        <p>Place a new order or review the items selected from the product page.</p>
+      </section>
+
+      <section class="order-panel">
+        <form id="order-form" class="card">
+          <h3>Place a new order</h3>
+          <label>
+            Customer Name
+            <input id="customer-name" type="text" placeholder="Your name" required />
+          </label>
+          <label>
+            Product
+            <select id="order-product">
+              <option value="Chocolate Cake">Chocolate Cake</option>
+              <option value="Artisan Bread">Artisan Bread</option>
+              <option value="Butter Pastry">Butter Pastry</option>
+              <option value="Classic Cookies">Classic Cookies</option>
+              <option value="Glazed Donuts">Glazed Donuts</option>
+              <option value="Blueberry Muffins">Blueberry Muffins</option>
+            </select>
+          </label>
+          <label>
+            Quantity
+            <input id="order-quantity" type="number" min="1" value="1" />
+          </label>
+          <div class="button-row">
+            <button id="add-order-btn" type="submit" class="btn">Add Order</button>
+            <button id="clear-orders-btn" type="button" class="secondary-btn">Clear Orders</button>
+          </div>
+        </form>
+
+        <section class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer Name</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Order Status</th>
+              </tr>
+            </thead>
+            <tbody id="orders-body">
+              <tr>
+                <td colspan="6" class="empty-state">No items ordered yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('order-form');
+        const customerInput = document.getElementById('customer-name');
+        const productInput = document.getElementById('order-product');
+        const quantityInput = document.getElementById('order-quantity');
+        const ordersBody = document.getElementById('orders-body');
+        const clearButton = document.getElementById('clear-orders-btn');
+        const productPrices = {
+          'Chocolate Cake': 2400,
+          'Artisan Bread': 600,
+          'Butter Pastry': 400,
+          'Classic Cookies': 300,
+          'Glazed Donuts': 250,
+          'Blueberry Muffins': 350
+        };
+
+        function renderOrders() {
+          const orders = JSON.parse(localStorage.getItem('bakeryOrders') || '[]');
+
+          if (!orders.length) {
+            ordersBody.innerHTML = '<tr><td colspan="6" class="empty-state">No items ordered yet. Go to the products page or place a new order.</td></tr>';
+            return;
+          }
+
+          ordersBody.innerHTML = orders
+            .map((order, index) => {
+              const orderId = `#ORD-${index + 1}`;
+              const totalPrice = `₹${order.total.toLocaleString('en-IN')}`;
+              return `
+                <tr>
+                  <td>${orderId}</td>
+                  <td>${order.customer || 'You'}</td>
+                  <td>${order.name}</td>
+                  <td>${order.quantity}</td>
+                  <td>${totalPrice}</td>
+                  <td class="in-stock">Confirmed</td>
+                </tr>`;
+            })
+            .join('');
+        }
+
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const customerName = customerInput.value.trim() || 'Guest';
+          const product = productInput.value;
+          const quantity = Number(quantityInput.value) || 1;
+          const price = productPrices[product] || 0;
+          const storedOrders = JSON.parse(localStorage.getItem('bakeryOrders') || '[]');
+          const existingItem = storedOrders.find((item) => item.name === product);
+
+          if (existingItem) {
+            existingItem.quantity += quantity;
+            existingItem.total = existingItem.quantity * existingItem.price;
+            existingItem.customer = customerName;
+          } else {
+            storedOrders.push({ name: product, price, quantity, total: price * quantity, customer: customerName });
+          }
+
+          localStorage.setItem('bakeryOrders', JSON.stringify(storedOrders));
+          customerInput.value = '';
+          quantityInput.value = 1;
+          renderOrders();
+        });
+
+        clearButton.addEventListener('click', () => {
+          localStorage.removeItem('bakeryOrders');
+          renderOrders();
+        });
+
+        renderOrders();
+      });
+    </script>
+
+    <footer class="site-footer">
+      <p>© 2026 Golden Crust Bakery</p>
+      <p>Follow us: Instagram • Facebook • Pinterest</p>
+    </footer>
+  </body>
+</html>

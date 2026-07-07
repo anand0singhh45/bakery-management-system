@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect width="200" height="200" rx="32" fill="#D2691E"/>
+  <circle cx="100" cy="100" r="70" fill="#F4E1C1"/>
+  <path d="M70 90c0-20 15-35 30-35s30 15 30 35c0 14-8 25-20 30l10 25H80l10-25c-12-5-20-16-20-30z" fill="#FFD54F"/>
+  <text x="100" y="170" text-anchor="middle" font-family="Arial" font-size="22" fill="#333">Golden Crust</text>
+</svg>
